@@ -1,0 +1,13 @@
+package com.moksha.developer_growth_tracker.controller;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class HealthController {
+
+    @GetMapping("/health")
+    public String health() {
+        return "Developer Growth Tracker Running";
+    }
+}

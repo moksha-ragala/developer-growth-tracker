@@ -19,3 +19,32 @@ A full-stack platform that helps developers track technical growth through GitHu
 - Skill Gap Analysis
 - Resume Analyzer
 - Learning Roadmap
+
+## Architecture
+
+Frontend (React)
+       ↓
+REST APIs
+       ↓
+Spring Boot Backend
+       ↓
+MySQL Database
+
+## Project Roadmap
+
+Phase 1
+- User Registration
+- Login Authentication
+- JWT Security
+
+Phase 2
+- GitHub Analytics
+- Developer Scoring
+
+Phase 3
+- Skill Gap Analysis
+- Learning Roadmap
+
+Phase 4
+- Resume Analyzer
+- Recruiter Dashboard

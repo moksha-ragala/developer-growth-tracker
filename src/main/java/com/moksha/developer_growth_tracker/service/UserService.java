@@ -4,6 +4,8 @@ import com.moksha.developer_growth_tracker.dto.RegisterRequest;
 import com.moksha.developer_growth_tracker.entity.User;
 import com.moksha.developer_growth_tracker.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import java.util.Optional;
+import com.moksha.developer_growth_tracker.dto.LoginRequest;
 
 import java.time.LocalDateTime;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,5 +43,29 @@ public class UserService {
         userRepository.save(user);
 
         return "User registered successfully";
+    }
+
+    public String login(LoginRequest request) {
+
+        Optional<User> optionalUser =
+                userRepository.findByEmail(request.getEmail());
+
+        if (optionalUser.isEmpty()) {
+            return "User not found";
+        }
+
+        User user = optionalUser.get();
+
+        boolean matches =
+                passwordEncoder.matches(
+                        request.getPassword(),
+                        user.getPassword()
+                );
+
+        if (!matches) {
+            return "Invalid password";
+        }
+
+        return "Login successful";
     }
 }

@@ -3,6 +3,7 @@ package com.moksha.developer_growth_tracker.controller;
 import com.moksha.developer_growth_tracker.dto.RegisterRequest;
 import com.moksha.developer_growth_tracker.service.UserService;
 import org.springframework.web.bind.annotation.*;
+import com.moksha.developer_growth_tracker.dto.LoginRequest;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -17,5 +18,10 @@ public class AuthController {
     @PostMapping("/register")
     public String register(@RequestBody RegisterRequest request) {
         return userService.register(request);
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestBody LoginRequest request) {
+        return userService.login(request);
     }
 }

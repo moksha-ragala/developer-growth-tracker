@@ -1,5 +1,6 @@
 package com.moksha.developer_growth_tracker.controller;
 
+import com.moksha.developer_growth_tracker.dto.ProfileResponse;
 import com.moksha.developer_growth_tracker.dto.RegisterRequest;
 import com.moksha.developer_growth_tracker.service.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -23,5 +24,12 @@ public class AuthController {
     @PostMapping("/login")
     public String login(@RequestBody LoginRequest request) {
         return userService.login(request);
+    }
+
+    @GetMapping("/profile/{email}")
+    public ProfileResponse getProfile(
+            @PathVariable String email) {
+
+        return userService.getProfile(email);
     }
 }

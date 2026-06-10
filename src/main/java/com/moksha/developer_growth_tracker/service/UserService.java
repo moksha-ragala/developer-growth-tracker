@@ -1,5 +1,6 @@
 package com.moksha.developer_growth_tracker.service;
 
+import com.moksha.developer_growth_tracker.dto.ProfileResponse;
 import com.moksha.developer_growth_tracker.dto.RegisterRequest;
 import com.moksha.developer_growth_tracker.entity.User;
 import com.moksha.developer_growth_tracker.repository.UserRepository;
@@ -67,5 +68,20 @@ public class UserService {
         }
 
         return "Login successful";
+    }
+
+    public ProfileResponse getProfile(String email) {
+
+        User user = userRepository
+                .findByEmail(email)
+                .orElseThrow();
+
+        return new ProfileResponse(
+                user.getName(),
+                user.getEmail(),
+                user.getGithubUsername(),
+                user.getLeetcodeUsername(),
+                user.getTargetRole()
+        );
     }
 }

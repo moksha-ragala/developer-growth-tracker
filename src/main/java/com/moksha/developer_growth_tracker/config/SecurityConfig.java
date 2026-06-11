@@ -25,6 +25,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/api/auth/**",
+                                "/api/github/**",
                                 "/health"
                         ).permitAll()
                         .anyRequest().authenticated()

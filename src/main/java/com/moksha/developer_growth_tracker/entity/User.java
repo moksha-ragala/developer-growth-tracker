@@ -21,6 +21,18 @@ public class User {
 
     private LocalDateTime createdAt;
 
+    public String getCodeforcesHandle() {
+        return codeforcesHandle;
+    }
+
+    public void setCodeforcesHandle(String codeforcesHandle) {
+        this.codeforcesHandle = codeforcesHandle;
+    }
+
+    private String codeforcesHandle;
+    private String hackerrankUsername;
+
+
     public User() {
     }
 

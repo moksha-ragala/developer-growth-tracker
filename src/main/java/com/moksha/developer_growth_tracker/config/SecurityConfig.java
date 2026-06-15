@@ -27,6 +27,7 @@ public class SecurityConfig {
                                 "/api/auth/**",
                                 "/api/github/**",
                                 "/api/developer/**",
+                                "/api/roadmap/**",
                                 "/health"
                         ).permitAll()
                         .anyRequest().authenticated()

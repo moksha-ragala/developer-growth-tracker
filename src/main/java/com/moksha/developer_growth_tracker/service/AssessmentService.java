@@ -12,13 +12,16 @@ public class AssessmentService {
 
     private final UserRepository userRepository;
     private final SkillMatrixService skillMatrixService;
+    private final CodeforcesService codeforcesService;
 
     public AssessmentService(
             UserRepository userRepository,
-            SkillMatrixService skillMatrixService) {
+            SkillMatrixService skillMatrixService,
+            CodeforcesService codeforcesService) {
 
         this.userRepository = userRepository;
         this.skillMatrixService = skillMatrixService;
+        this.codeforcesService = codeforcesService;
     }
 
     public DeveloperAssessmentResponse assess(
@@ -50,8 +53,20 @@ public class AssessmentService {
 
         int githubScore = 80;
         int leetcodeScore = 40;
-        int codeforcesScore = 30;
+
         int hackerrankScore = 50;
+
+        int codeforcesScore = 0;
+
+        if (user.getCodeforcesHandle() != null &&
+                !user.getCodeforcesHandle().isBlank()) {
+
+            codeforcesScore =
+                    codeforcesService
+                            .calculateScore(
+                                    user.getCodeforcesHandle()
+                            );
+        }
 
         int developerScore =
                 (githubScore +
@@ -73,8 +88,18 @@ public class AssessmentService {
             nextLevel = "Expert";
         }
 
-        String developerType =
-                "Java Full Stack Builder";
+        String developerType;
+
+        if (codeforcesScore >= 80) {
+
+            developerType =
+                    "Problem Solver";
+
+        } else {
+
+            developerType =
+                    "Java Full Stack Builder";
+        }
 
         return new DeveloperAssessmentResponse(
                 role,

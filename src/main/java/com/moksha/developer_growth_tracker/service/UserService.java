@@ -38,6 +38,9 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setGithubUsername(request.getGithubUsername());
         user.setLeetcodeUsername(request.getLeetcodeUsername());
+        user.setCodeforcesHandle(
+                request.getCodeforcesHandle()
+        );
         user.setTargetRole(request.getTargetRole());
         user.setCreatedAt(LocalDateTime.now());
 

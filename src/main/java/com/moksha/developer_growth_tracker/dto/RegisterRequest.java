@@ -9,6 +9,16 @@ public class RegisterRequest {
     private String leetcodeUsername;
     private String targetRole;
 
+    public String getCodeforcesHandle() {
+        return codeforcesHandle;
+    }
+
+    public void setCodeforcesHandle(String codeforcesHandle) {
+        this.codeforcesHandle = codeforcesHandle;
+    }
+
+    private String codeforcesHandle;
+
     public RegisterRequest() {
     }
 

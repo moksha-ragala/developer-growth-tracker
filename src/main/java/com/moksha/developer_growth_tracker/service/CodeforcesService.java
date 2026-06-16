@@ -26,4 +26,36 @@ public class CodeforcesService {
 
         return response.getResult().get(0);
     }
+
+    public int calculateScore(
+            String handle) {
+
+        CodeforcesResponse profile =
+                getProfile(handle);
+
+        Integer rating =
+                profile.getRating();
+
+        if (rating == null) {
+            return 0;
+        }
+
+        if (rating < 1200) {
+            return 20;
+        }
+
+        if (rating < 1400) {
+            return 40;
+        }
+
+        if (rating < 1600) {
+            return 60;
+        }
+
+        if (rating < 1900) {
+            return 80;
+        }
+
+        return 100;
+    }
 }

@@ -29,6 +29,7 @@ public class SecurityConfig {
                                 "/api/developer/**",
                                 "/api/roadmap/**",
                                 "/api/codeforces/**",
+                                "/api/dashboard/**",
                                 "/health"
                         ).permitAll()
                         .anyRequest().authenticated()

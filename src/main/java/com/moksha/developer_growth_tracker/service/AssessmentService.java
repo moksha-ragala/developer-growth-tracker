@@ -13,15 +13,18 @@ public class AssessmentService {
     private final UserRepository userRepository;
     private final SkillMatrixService skillMatrixService;
     private final CodeforcesService codeforcesService;
+    private final GithubService githubService;
 
     public AssessmentService(
             UserRepository userRepository,
             SkillMatrixService skillMatrixService,
-            CodeforcesService codeforcesService) {
+            CodeforcesService codeforcesService,
+            GithubService githubService) {
 
         this.userRepository = userRepository;
         this.skillMatrixService = skillMatrixService;
         this.codeforcesService = codeforcesService;
+        this.githubService = githubService;
     }
 
     public DeveloperAssessmentResponse assess(
@@ -51,28 +54,55 @@ public class AssessmentService {
                 (currentSkills.size() * 100)
                         / requiredSkills.size();
 
-        int githubScore = 80;
+        int githubScore = 0;
+
+        if (user.getGithubUsername() != null &&
+                !user.getGithubUsername().isBlank()) {
+
+            githubScore =
+                    githubService.calculateGithubScore(
+                            user.getGithubUsername()
+                    );
+        }
         int leetcodeScore = 40;
 
         int hackerrankScore = 50;
 
         int codeforcesScore = 0;
 
-        if (user.getCodeforcesHandle() != null &&
-                !user.getCodeforcesHandle().isBlank()) {
+        try {
 
-            codeforcesScore =
-                    codeforcesService
-                            .calculateScore(
-                                    user.getCodeforcesHandle()
-                            );
+            if (user.getCodeforcesHandle() != null &&
+                    !user.getCodeforcesHandle().isBlank()) {
+
+                codeforcesScore =
+                        codeforcesService.calculateScore(
+                                user.getCodeforcesHandle()
+                        );
+            }
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "Codeforces profile unavailable"
+            );
+        }
+        int total = githubScore + codeforcesScore;
+
+        int sources = 0;
+
+        if (githubScore > 0) {
+            sources++;
+        }
+
+        if (codeforcesScore > 0) {
+            sources++;
         }
 
         int developerScore =
-                (githubScore +
-                        leetcodeScore +
-                        codeforcesScore +
-                        hackerrankScore) / 4;
+                sources > 0
+                        ? total / sources
+                        : 0;
 
         String level;
         String nextLevel;
@@ -90,7 +120,13 @@ public class AssessmentService {
 
         String developerType;
 
-        if (codeforcesScore >= 80) {
+        if (githubScore >= 70 &&
+                codeforcesScore >= 70) {
+
+            developerType =
+                    "Balanced Engineer";
+
+        } else if (codeforcesScore >= 70) {
 
             developerType =
                     "Problem Solver";

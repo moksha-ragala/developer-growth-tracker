@@ -129,4 +129,32 @@ public class GithubService {
 
         return totalCommits;
     }
+
+    public int calculateGithubScore(
+            String username) {
+
+        GithubAnalyticsResponse analytics =
+                getAnalytics(username);
+
+        int score = 0;
+
+        score += Math.min(
+                analytics.getPublicRepos() * 2,
+                30
+        );
+
+        score += Math.min(
+                analytics.getTotalCommits() / 5,
+                40
+        );
+
+        score += Math.min(
+                analytics.getFollowers(),
+                20
+        );
+
+        score += 10;
+
+        return Math.min(score, 100);
+    }
 }

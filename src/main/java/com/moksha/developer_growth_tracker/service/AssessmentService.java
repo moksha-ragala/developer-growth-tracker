@@ -1,10 +1,14 @@
 package com.moksha.developer_growth_tracker.service;
 
 import com.moksha.developer_growth_tracker.dto.DeveloperAssessmentResponse;
+import com.moksha.developer_growth_tracker.entity.ProgressHistory;
 import com.moksha.developer_growth_tracker.entity.User;
+import com.moksha.developer_growth_tracker.repository.ProgressHistoryRepository;
 import com.moksha.developer_growth_tracker.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -14,17 +18,21 @@ public class AssessmentService {
     private final SkillMatrixService skillMatrixService;
     private final CodeforcesService codeforcesService;
     private final GithubService githubService;
+    private final ProgressHistoryRepository progressHistoryRepository;
 
     public AssessmentService(
             UserRepository userRepository,
             SkillMatrixService skillMatrixService,
             CodeforcesService codeforcesService,
-            GithubService githubService) {
+            GithubService githubService,
+            ProgressHistoryRepository progressHistoryRepository) {
 
         this.userRepository = userRepository;
         this.skillMatrixService = skillMatrixService;
         this.codeforcesService = codeforcesService;
         this.githubService = githubService;
+        this.progressHistoryRepository =
+                progressHistoryRepository;
     }
 
     public DeveloperAssessmentResponse assess(
@@ -136,6 +144,23 @@ public class AssessmentService {
             developerType =
                     "Java Full Stack Builder";
         }
+
+        ProgressHistory history =
+                new ProgressHistory();
+
+        history.setEmail(email);
+
+        history.setDeveloperScore(
+                developerScore
+        );
+
+        history.setCreatedAt(
+                LocalDateTime.now()
+        );
+
+        progressHistoryRepository.save(
+                history
+        );
 
         return new DeveloperAssessmentResponse(
                 role,

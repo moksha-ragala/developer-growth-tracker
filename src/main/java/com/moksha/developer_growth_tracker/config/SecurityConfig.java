@@ -30,6 +30,7 @@ public class SecurityConfig {
                                 "/api/roadmap/**",
                                 "/api/codeforces/**",
                                 "/api/dashboard/**",
+                                "/api/progress/**",
                                 "/health"
                         ).permitAll()
                         .anyRequest().authenticated()

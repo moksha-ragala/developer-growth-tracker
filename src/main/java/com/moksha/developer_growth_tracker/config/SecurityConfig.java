@@ -31,6 +31,7 @@ public class SecurityConfig {
                                 "/api/codeforces/**",
                                 "/api/dashboard/**",
                                 "/api/progress/**",
+                                "/api/leetcode/**",
                                 "/api/insights/**",
                                 "/health"
                         ).permitAll()

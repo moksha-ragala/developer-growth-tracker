@@ -1,12 +1,12 @@
 package com.moksha.developer_growth_tracker.service;
 
 import com.moksha.developer_growth_tracker.dto.DeveloperAssessmentResponse;
+import com.moksha.developer_growth_tracker.dto.LeetcodeStatsResponse;
 import com.moksha.developer_growth_tracker.entity.ProgressHistory;
 import com.moksha.developer_growth_tracker.entity.User;
 import com.moksha.developer_growth_tracker.repository.ProgressHistoryRepository;
 import com.moksha.developer_growth_tracker.repository.UserRepository;
 import org.springframework.stereotype.Service;
-
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,6 +18,7 @@ public class AssessmentService {
     private final SkillMatrixService skillMatrixService;
     private final CodeforcesService codeforcesService;
     private final GithubService githubService;
+    private final LeetcodeService leetcodeService;
     private final ProgressHistoryRepository progressHistoryRepository;
 
     public AssessmentService(
@@ -25,14 +26,15 @@ public class AssessmentService {
             SkillMatrixService skillMatrixService,
             CodeforcesService codeforcesService,
             GithubService githubService,
+            LeetcodeService leetcodeService,
             ProgressHistoryRepository progressHistoryRepository) {
 
         this.userRepository = userRepository;
         this.skillMatrixService = skillMatrixService;
         this.codeforcesService = codeforcesService;
         this.githubService = githubService;
-        this.progressHistoryRepository =
-                progressHistoryRepository;
+        this.leetcodeService = leetcodeService;
+        this.progressHistoryRepository = progressHistoryRepository;
     }
 
     public DeveloperAssessmentResponse assess(
@@ -72,7 +74,31 @@ public class AssessmentService {
                             user.getGithubUsername()
                     );
         }
-        int leetcodeScore = 40;
+
+        int leetcodeScore = 0;
+
+        try {
+
+            if (user.getLeetcodeUsername() != null &&
+                    !user.getLeetcodeUsername().isBlank()) {
+
+                LeetcodeStatsResponse stats =
+                        leetcodeService.getStats(
+                                user.getLeetcodeUsername()
+                        );
+
+                leetcodeScore =
+                        leetcodeService.calculateScore(
+                                stats
+                        );
+            }
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "LeetCode profile unavailable"
+            );
+        }
 
         int hackerrankScore = 50;
 
@@ -95,11 +121,19 @@ public class AssessmentService {
                     "Codeforces profile unavailable"
             );
         }
-        int total = githubScore + codeforcesScore;
+
+        int total =
+                githubScore +
+                        leetcodeScore +
+                        codeforcesScore;
 
         int sources = 0;
 
         if (githubScore > 0) {
+            sources++;
+        }
+
+        if (leetcodeScore > 0) {
             sources++;
         }
 
@@ -116,12 +150,17 @@ public class AssessmentService {
         String nextLevel;
 
         if (skillCoverage < 40) {
+
             level = "Beginner";
             nextLevel = "Intermediate";
+
         } else if (skillCoverage < 75) {
+
             level = "Intermediate";
             nextLevel = "Advanced";
+
         } else {
+
             level = "Advanced";
             nextLevel = "Expert";
         }
@@ -129,15 +168,20 @@ public class AssessmentService {
         String developerType;
 
         if (githubScore >= 70 &&
-                codeforcesScore >= 70) {
+                leetcodeScore >= 70) {
 
             developerType =
-                    "Balanced Engineer";
+                    "Full Stack Problem Solver";
 
-        } else if (codeforcesScore >= 70) {
+        } else if (leetcodeScore >= 70) {
 
             developerType =
-                    "Problem Solver";
+                    "DSA Specialist";
+
+        } else if (githubScore >= 70) {
+
+            developerType =
+                    "Project Builder";
 
         } else {
 
